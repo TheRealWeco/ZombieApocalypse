@@ -1,25 +1,18 @@
 package tk.astris.tile;
 
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+
+import tk.astris.data.Size;
 
 public class Tile {
 
 	
-	public float x;
-	public float y;
 	public BufferedImage image;
-	public Rectangle bounding;
+	public Size size;
 	
-	public Tile(float x, float y, BufferedImage image){
-		this.x = x;
-		this.y = y;
+	public Tile(BufferedImage image, Size size){
 		this.image = image;
-		this.bounding = new Rectangle((int)x, (int)y, 50, 50);
+		this.size = size;
 	}
-	
-	public Rectangle getBounding(){
-		return bounding;
-	}
-	
+		
 }

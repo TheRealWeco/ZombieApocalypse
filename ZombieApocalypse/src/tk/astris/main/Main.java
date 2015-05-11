@@ -6,7 +6,9 @@ import tk.astris.data.Char;
 import tk.astris.data.Size;
 import tk.astris.fileManager.Images;
 import tk.astris.fileManager.Language;
+import tk.astris.levels.LevelLoader;
 import tk.astris.player.Player;
+import tk.astris.tile.Tiles;
 
 
 public class Main {
@@ -27,6 +29,8 @@ public class Main {
 	public static Main instance;
 	public static Language language;
 	public static Images images;
+	public static LevelLoader levelLoader;
+	public static Tiles tiles;
 	
 	public static ArrayList<Char> characters = new ArrayList<Char>();
 	
@@ -78,9 +82,11 @@ public class Main {
 		
 		characters.add(new Char(null, language.string.get("steve"), new Size(50, 50), 100, 1.0F, 1));
 		
+		levelLoader = new LevelLoader();
 		images = new Images();
+		tiles = new Tiles();
 		player = new Player(WIDTH/2-characters.get(0).size.x/2, HEIGHT/2-characters.get(0).size.y/2, characters.get(0));
-		frame = new Frame(player);
+		frame = new Frame(player, levelLoader.levelMap.get("1"));
 		
 		
 		frame.setVisible(true);

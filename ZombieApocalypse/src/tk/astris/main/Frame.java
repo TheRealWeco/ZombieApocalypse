@@ -2,13 +2,13 @@ package tk.astris.main;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import tk.astris.entity.Entity;
+import tk.astris.levels.Level;
 import tk.astris.player.Player;
 import tk.astris.tile.Tile;
 
@@ -25,9 +25,12 @@ public class Frame extends JFrame{
 	
 	int tileSize = 50;
 
-	public Frame(Player p){
+	Level lvl;
+	
+	public Frame(Player p, Level level){
 		super("ZombieApocalypse ALPHA V." + Main.VERSION);		
 		
+		lvl = level;
 		player = p;
 		entitys.add(player);
 		zeichnen = new paint();
@@ -52,7 +55,7 @@ public class Frame extends JFrame{
 			entity.update();
 		}
 		
-		if(keyCheck.keysCheck(KeyEvent.VK_W)){
+		/*if(keyCheck.keysCheck(KeyEvent.VK_W)){
 			for(int i = 0; i < tiles.size(); i++){
 				Tile tile = tiles.get(i);
 				tile.y = tile.y + player.speed;
@@ -79,30 +82,16 @@ public class Frame extends JFrame{
 				tile.x = tile.x - player.speed;
 			}
 			onMove();
-		}
+		}*/
 	}
 
 	
 	public void onMove(){
-		int toRemoveLimit = 50;
-		for(int i = 0; i < tiles.size(); i++){		//TODO: Loops better
-			Tile tile = tiles.get(i);
-			if(tile.x < -toRemoveLimit){
-				tiles.remove(i);
-			}
-			if(tile.x > Main.WIDTH + toRemoveLimit){
-				tiles.remove(i);
-			}
-			if(tile.y < -toRemoveLimit){
-				tiles.remove(i);
-				
-			}
-			if(tile.y > Main.HEIGHT + toRemoveLimit){
-				tiles.remove(i);
-			}
-		}
-	}
 		
+	}
+	
+	
+
 	private class paint extends JLabel{
 		@Override
 		public void paintComponent(Graphics g){
@@ -110,11 +99,10 @@ public class Frame extends JFrame{
 			
 			Graphics2D g2d = (Graphics2D) g;
 			
-			if(loadFirst){
-				
+			/*if(loadFirst){			
 				for(int x = 0; x < Main.WIDTH; x = x + tileSize){
 					for(int y = 0; y < Main.HEIGHT; y = y + tileSize){
-				tiles.add(new Tile(x, y, Main.images.getSpriteSheet().getSubimage(0, 0, tileSize, tileSize)));
+				       tiles.add(new Tile(x, y, Main.images.getSpriteSheet().getSubimage(0, 0, tileSize, tileSize)));
 					}
 				}
 				loadFirst = false;
@@ -123,6 +111,13 @@ public class Frame extends JFrame{
 			for(int i = 0; i < tiles.size(); i++){
 				Tile tile = tiles.get(i);
 				g2d.drawImage(tile.image, (int)tile.x, (int)tile.y, null);
+			}*/
+			
+			for(int x = 0; x < lvl.size.x; x++){
+				for(int y = 0; y < lvl.size.y; y++){
+				    Tile tile0 = Main.tiles.tiles.get(lvl.tiles[x][y]);
+					g2d.drawImage(tile0.image, y*tile0.size.y, x*tile0.size.x,  null);
+				}
 			}
 			
 		}
