@@ -1,9 +1,11 @@
 package tk.astris.player;
 
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 
 import tk.astris.data.Char;
 import tk.astris.entity.Entity;
+import tk.astris.main.keyCheck;
 
 public class Player extends Entity{
 		
@@ -36,6 +38,9 @@ public class Player extends Entity{
 	public void move() {
 		super.move();
 		
+		if(keyCheck.keysCheck(KeyEvent.VK_W)){
+			x = x + speed;
+		}
 		
 		
 	}

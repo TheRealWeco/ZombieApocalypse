@@ -2,8 +2,10 @@ package tk.astris.main;
 
 import java.util.ArrayList;
 
+import tk.astris.data.AnimationChar;
 import tk.astris.data.Char;
 import tk.astris.data.Size;
+import tk.astris.data.State;
 import tk.astris.fileManager.Images;
 import tk.astris.fileManager.Language;
 import tk.astris.levels.LevelLoader;
@@ -20,8 +22,8 @@ public class Main {
 	boolean newVersion = true;
 	
 	public static String VERSION = "0.0.1";
-	public static int HEIGHT = 800;
-	public static int WIDTH = 800;
+	public static int HEIGHT = 16*50 + 25;
+	public static int WIDTH = 16*50;
 	
 	
 	public static Frame frame;
@@ -80,7 +82,10 @@ public class Main {
 		language = new Language();
 		language.setupLanguage();
 		
-		characters.add(new Char(null, language.string.get("steve"), new Size(50, 50), 100, 1.0F, 1));
+		ArrayList<AnimationChar> animations = new ArrayList<AnimationChar>();
+		animations.add(new AnimationChar("idle", new State(0, images.getSpriteSheet().getSubimage(200, 0, 50, 50))));
+		//TODO
+		characters.add(new Char(images.getSpriteSheet().getSubimage(200, 0, 50, 50), animations, language.string.get("steve"), new Size(50, 50), 100, 1.0F, 1));
 		
 		levelLoader = new LevelLoader();
 		images = new Images();

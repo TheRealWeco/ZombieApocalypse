@@ -25,18 +25,18 @@ public class LevelLoader {
 		try(BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("tk\\astris\\levels\\" + name + ".level")))) {
 		    for(String line; (line = br.readLine()) != null; ) {
 		    	System.out.println(line);
-		    	if(line.startsWith("declare=")){
-		    		String[] text = line.replaceFirst("declare=", "").split(",");
-		    		multi = new String[Integer.parseInt(text[0])][Integer.parseInt(text[1])];
-		    		System.out.println(text[0] + " : " + text[1]);
-		    		size = new Size(Integer.parseInt(text[0]), Integer.parseInt(text[1]));
-		    	}else{
+		    	
+		    	if(multi == null){
+		    		multi = new String[length(name)][line.replaceAll(" ", "").length()];
+		    		size = new Size(length(name), line.replaceAll(" ", "").length());
+
+		    	}
+		    	
 		    		String[] text = line.split(" ");
 		    		for(int i = 0; i < text.length; i++){
 		    			multi[lineCount][i] = text[i];
 		    		}
 			    	lineCount++;
-		    	}
 		    	
 		    }
 		} catch (IOException e) {
@@ -47,5 +47,17 @@ public class LevelLoader {
 		levelMap.put(name, lvl);
 		
 	}
+	
+	@SuppressWarnings("unused")
+	private int length(String name) throws IOException{
+		int length = 0;
+	try(BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("tk\\astris\\levels\\" + name + ".level")))) {
+	    for(String line; (line = br.readLine()) != null; ) {
+	    	length++;
+	    }
+	}
+	return length;
+	}
+
 
 }
