@@ -2,10 +2,9 @@ package tk.astris.main;
 
 import java.util.ArrayList;
 
-import tk.astris.data.AnimationChar;
+import tk.astris.camera.Camera;
 import tk.astris.data.Char;
 import tk.astris.data.Size;
-import tk.astris.data.State;
 import tk.astris.fileManager.Images;
 import tk.astris.fileManager.Language;
 import tk.astris.levels.LevelLoader;
@@ -33,6 +32,7 @@ public class Main {
 	public static Images images;
 	public static LevelLoader levelLoader;
 	public static Tiles tiles;
+	public static Camera camera;
 	
 	public static ArrayList<Char> characters = new ArrayList<Char>();
 	
@@ -82,16 +82,24 @@ public class Main {
 		language = new Language();
 		language.setupLanguage();
 		
-		ArrayList<AnimationChar> animations = new ArrayList<AnimationChar>();
-		animations.add(new AnimationChar("idle", new State(0, images.getSpriteSheet().getSubimage(200, 0, 50, 50))));
-		//TODO
-		characters.add(new Char(images.getSpriteSheet().getSubimage(200, 0, 50, 50), animations, language.string.get("steve"), new Size(50, 50), 100, 1.0F, 1));
-		
 		levelLoader = new LevelLoader();
+		camera = new Camera();
 		images = new Images();
 		tiles = new Tiles();
+		characters.add(new Char(language.string.get("steve"), new Size(50, 50), 100, 1.0F, 1, 2, 2, 2));
+		
+		characters.get(0).walkBack[0] = images.getSpriteSheet().getSubimage(0, 200, 50, 50);
+		characters.get(0).walkBack[1] = images.getSpriteSheet().getSubimage(50, 200, 50, 50);
+		
+		characters.get(0).walkFront[0] = images.getSpriteSheet().getSubimage(150, 200, 50, 50);
+		characters.get(0).walkFront[1] = images.getSpriteSheet().getSubimage(200, 200, 50, 50);
+
+		characters.get(0).walkLeft[0] = images.getSpriteSheet().getSubimage(250, 200, 50, 50);
+		characters.get(0).walkLeft[1] = images.getSpriteSheet().getSubimage(300, 200, 50, 50);
+		
 		player = new Player(WIDTH/2-characters.get(0).size.x/2, HEIGHT/2-characters.get(0).size.y/2, characters.get(0));
-		frame = new Frame(player, levelLoader.levelMap.get("1"));
+		
+		frame = new Frame(player, levelLoader.getLevel("1"));
 		
 		
 		frame.setVisible(true);

@@ -9,6 +9,7 @@ public class Tile {
 	
 	public BufferedImage image;
 	public Size size;
+	public boolean colision = false;
 	
 	public Tile(BufferedImage image, Size size){
 		this.image = image;

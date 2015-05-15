@@ -2,6 +2,7 @@ package tk.astris.main;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -55,6 +56,23 @@ public class Frame extends JFrame{
 			entity.update();
 		}
 		
+		if(keyCheck.keysCheck(KeyEvent.VK_W)){
+			Main.camera.y = Main.camera.y + player.speed;
+			onMove();
+		}
+		if(keyCheck.keysCheck(KeyEvent.VK_S)){
+			Main.camera.y = Main.camera.y - player.speed;
+			onMove();
+		}
+		if(keyCheck.keysCheck(KeyEvent.VK_A)){
+			Main.camera.x = Main.camera.x + player.speed;
+			onMove();
+		}
+		if(keyCheck.keysCheck(KeyEvent.VK_D)){
+			Main.camera.x = Main.camera.x - player.speed;
+			onMove();
+		}
+
 		/*if(keyCheck.keysCheck(KeyEvent.VK_W)){
 			for(int i = 0; i < tiles.size(); i++){
 				Tile tile = tiles.get(i);
@@ -113,11 +131,18 @@ public class Frame extends JFrame{
 				g2d.drawImage(tile.image, (int)tile.x, (int)tile.y, null);
 			}*/
 			
+			
 			for(int x = 0; x < lvl.size.x; x++){
 				for(int y = 0; y < lvl.size.y; y++){
 				    Tile tile0 = Main.tiles.tiles.get(lvl.tiles[x][y]);
-					g2d.drawImage(tile0.image, y*tile0.size.y, x*tile0.size.x,  null);
+					g2d.drawImage(tile0.image, (int)(y*tile0.size.y + Main.camera.x), (int)(x*tile0.size.x + Main.camera.y),  null);
 				}
+			}
+			
+			if(player.revertTexture){
+				g2d.drawImage(player.image, (int)player.x + player.size.x, (int)player.y, -player.size.x, player.size.y, null);
+			}else{
+			g2d.drawImage(player.image, (int)player.x, (int)player.y, null);
 			}
 			
 		}
