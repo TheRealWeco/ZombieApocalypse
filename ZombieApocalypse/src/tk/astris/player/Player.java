@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 
 import tk.astris.data.Char;
 import tk.astris.entity.Entity;
+import tk.astris.main.Main;
 import tk.astris.main.keyCheck;
 
 public class Player extends Entity{
@@ -28,22 +29,28 @@ public class Player extends Entity{
 	String facing = "front";
 	boolean walking = false;
 	
-	public Player(float x, float y, Char character){
+	public float trueX = 0;
+	public float trueY = 0;
+	
+	public Player(Char character){
 		this.character = character;
 		this.hp = character.hp;
 		this.dmg = character.dmg;
 		
-		this.x = x;
-		this.y = y;
 		this.speed = character.speed;
 		this.canMove = true;
 		this.hasHitbox = true;
 		this.bounding = new Rectangle((int)x, (int)y);
 		this.size = character.size;
-		
+		this.x = Main.WIDTH/2 - size.x;
+		this.y = Main.HEIGHT/2 - size.x;
+
 		this.oldX = x;
 		this.oldY = y;
 		this.image = character.walkFront[0];
+		
+		this.trueX = x + size.x*2 + size.x/5;
+		this.trueY = y;
 
 	}
 	
@@ -51,6 +58,7 @@ public class Player extends Entity{
 	@Override
 	public void move() {
 		super.move();
+		
 		
 		if(keyCheck.keysCheck(KeyEvent.VK_W)){
 			maxWalkTime = sWalkTime*character.walkFront.length;

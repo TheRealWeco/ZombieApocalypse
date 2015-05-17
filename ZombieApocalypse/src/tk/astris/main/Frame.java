@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import tk.astris.entity.Entity;
+import tk.astris.entity.ZombieType;
 import tk.astris.levels.Level;
 import tk.astris.player.Player;
 import tk.astris.tile.Tile;
@@ -20,6 +21,7 @@ public class Frame extends JFrame{
 	Player player;
 	
 	ArrayList<Entity> entitys = new ArrayList<Entity>();
+	ArrayList<ZombieType> zombies2 = new ArrayList<ZombieType>();
 	public ArrayList<Tile> tiles = new ArrayList<Tile>();
 	
 	boolean loadFirst = true;
@@ -27,6 +29,8 @@ public class Frame extends JFrame{
 	int tileSize = 50;
 
 	Level lvl;
+	
+	boolean debug = true;
 	
 	public Frame(Player p, Level level){
 		super("ZombieApocalypse ALPHA V." + Main.VERSION);		
@@ -51,26 +55,37 @@ public class Frame extends JFrame{
 	
 	public void update() {
 		
-		for(int i = 0; i < entitys.size(); i++){
-			Entity entity = entitys.get(i);
-			entity.update();
-		}
 		
 		if(keyCheck.keysCheck(KeyEvent.VK_W)){
 			Main.camera.y = Main.camera.y + player.speed;
+			player.trueY = player.trueY - player.speed;
 			onMove();
 		}
 		if(keyCheck.keysCheck(KeyEvent.VK_S)){
 			Main.camera.y = Main.camera.y - player.speed;
+			player.trueY = player.trueY + player.speed;
 			onMove();
 		}
 		if(keyCheck.keysCheck(KeyEvent.VK_A)){
 			Main.camera.x = Main.camera.x + player.speed;
+			player.trueX = player.trueX - player.speed;
 			onMove();
 		}
 		if(keyCheck.keysCheck(KeyEvent.VK_D)){
 			Main.camera.x = Main.camera.x - player.speed;
+			player.trueX = player.trueX + player.speed;
 			onMove();
+		}
+		for(int i = 0; i < entitys.size(); i++){
+			Entity entity = entitys.get(i);
+			entity.update();
+		}
+		for(int i = 0; i < zombies2.size(); i++){
+			if(!zombies2.get(i).isDead){
+			zombies2.get(i).update();
+			}else{
+				zombies2.remove(i);
+			}
 		}
 
 		/*if(keyCheck.keysCheck(KeyEvent.VK_W)){
@@ -131,7 +146,7 @@ public class Frame extends JFrame{
 				g2d.drawImage(tile.image, (int)tile.x, (int)tile.y, null);
 			}*/
 			
-			
+
 			for(int x = 0; x < lvl.size.x; x++){
 				for(int y = 0; y < lvl.size.y; y++){
 				    Tile tile0 = Main.tiles.tiles.get(lvl.tiles[x][y]);
@@ -144,7 +159,44 @@ public class Frame extends JFrame{
 			}else{
 			g2d.drawImage(player.image, (int)player.x, (int)player.y, null);
 			}
+
 			
+			/*for(int i = 0; i < zombies.size(); i++){
+				Zombie z = zombies.get(i);
+				System.out.println(zombies.size() + " : " + z.x + " : " + z.y);
+				g2d.drawImage(z.walkBack[0], (int)(z.x + Main.camera.x), (int)(z.y + Main.camera.y), null);
+			}*/
+			
+			for(ZombieType zt : zombies2){
+				if(!zt.revertTexture){
+					g2d.drawImage(zt.image, (int)(zt.x + Main.camera.x), (int)(zt.y + Main.camera.y), null);
+
+				}else{
+					g2d.drawImage(zt.image, (int)(zt.x + Main.camera.x) + zt.zombie.size.x, (int)(zt.y + Main.camera.y), -zt.zombie.size.x, zt.zombie.size.y,  null);
+				}
+			}
+			
+			if(debug){
+				g2d.drawRect((int)(player.trueX + Main.camera.x), (int)(player.trueY + Main.camera.y), player.size.x, player.size.y);
+			}
+
+			int rdm = Main.randInt(0, 100);
+			if(rdm == 100){
+				System.out.println("spawn");
+				zombies2.add(new ZombieType(Main.zombies.zombie.get("0"), player.x + Main.randInt(Main.WIDTH, Main.WIDTH + 500), player.y + Main.randInt(Main.HEIGHT, Main.HEIGHT + 500)));
+			}
+			if(rdm == 200){
+				System.out.println("spawn");
+				zombies2.add(new ZombieType(Main.zombies.zombie.get("0"), -player.x - Main.randInt(Main.WIDTH, Main.WIDTH + 500), player.y + Main.randInt(Main.HEIGHT, Main.HEIGHT + 500)));
+			}
+			if(rdm == 300){
+				System.out.println("spawn");
+				zombies2.add(new ZombieType(Main.zombies.zombie.get("0"), player.x + Main.randInt(Main.WIDTH, Main.WIDTH + 500), -player.y - Main.randInt(Main.HEIGHT, Main.HEIGHT + 500)));
+			}
+			if(rdm == 400){
+				System.out.println("spawn");
+				zombies2.add(new ZombieType(Main.zombies.zombie.get("0"), -player.x - Main.randInt(Main.WIDTH, Main.WIDTH + 500), -player.y - Main.randInt(Main.HEIGHT, Main.HEIGHT + 500)));
+			}
 		}
 	}	
 }

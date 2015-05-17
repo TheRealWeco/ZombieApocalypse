@@ -1,10 +1,12 @@
 package tk.astris.main;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import tk.astris.camera.Camera;
 import tk.astris.data.Char;
 import tk.astris.data.Size;
+import tk.astris.entity.Zombies;
 import tk.astris.fileManager.Images;
 import tk.astris.fileManager.Language;
 import tk.astris.levels.LevelLoader;
@@ -33,6 +35,7 @@ public class Main {
 	public static LevelLoader levelLoader;
 	public static Tiles tiles;
 	public static Camera camera;
+	public static Zombies zombies;
 	
 	public static ArrayList<Char> characters = new ArrayList<Char>();
 	
@@ -86,6 +89,7 @@ public class Main {
 		camera = new Camera();
 		images = new Images();
 		tiles = new Tiles();
+		zombies = new Zombies();
 		characters.add(new Char(language.string.get("steve"), new Size(50, 50), 100, 1.0F, 1, 2, 2, 2));
 		
 		characters.get(0).walkBack[0] = images.getSpriteSheet().getSubimage(0, 200, 50, 50);
@@ -97,10 +101,9 @@ public class Main {
 		characters.get(0).walkLeft[0] = images.getSpriteSheet().getSubimage(250, 200, 50, 50);
 		characters.get(0).walkLeft[1] = images.getSpriteSheet().getSubimage(300, 200, 50, 50);
 		
-		player = new Player(WIDTH/2-characters.get(0).size.x/2, HEIGHT/2-characters.get(0).size.y/2, characters.get(0));
+		player = new Player(characters.get(0));
 		
 		frame = new Frame(player, levelLoader.getLevel("1"));
-		
 		
 		frame.setVisible(true);
 		
@@ -112,4 +115,11 @@ public class Main {
 		}
 		
 	}
+	
+	public static int randInt(int min, int max) {
+	    Random rand = new Random();
+	    int randomNum = rand.nextInt((max - min) + 1) + min;
+	    return randomNum;
+	}
+	
 }
