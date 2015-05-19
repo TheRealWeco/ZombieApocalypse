@@ -1,7 +1,11 @@
 package tk.astris.entity;
 
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
+import tk.astris.data.Size;
 import tk.astris.main.Main;
 
 public class ZombieType {
@@ -25,16 +29,23 @@ public class ZombieType {
 	
 	public boolean isDead = false;
 	
+	public Size hearRaduisSize;
+	public Shape hearRaduis;
+	
+	public Rectangle bounding;
+	
 	public ZombieType(Zombie z, float x, float y){
 		this.zombie = z;
 		this.x = x;
 		this.y = y;
 		this.image = zombie.walkFront[0];
+		
+		this.hearRaduisSize = new Size(500, 500);
+		hearRaduis = new Ellipse2D.Float(x + Main.camera.x, y + Main.camera.y, hearRaduisSize.x, hearRaduisSize.y);
+		bounding = new Rectangle((int)(x + Main.camera.x), (int)(y + Main.camera.y), (int)zombie.size.x, (int)zombie.size.y);
 	}
 	
 	public void update(){
-		move();
-		
 		if(walking){
 		walkTime++;
 		if(walkTime == maxWalkTime){
@@ -71,10 +82,14 @@ public class ZombieType {
 		}
 		}
 		
+		hearRaduis = new Ellipse2D.Float(x + Main.camera.x - hearRaduisSize.x/2 + zombie.size.x/2, y + Main.camera.y - hearRaduisSize.y/2 + zombie.size.y/2, hearRaduisSize.x , hearRaduisSize.y);
+		if(walking){
+			walking = false;
+		}
 		
 	}
 	public void move(){
-		
+
 		if(x >= Main.player.trueX){
 			
 			this.revertTexture = true;
@@ -83,6 +98,8 @@ public class ZombieType {
 			walking = true;
 
 			x = x - zombie.speed;
+			onMove();
+
 		}
 		if(x <= Main.player.trueX){
 			x = x + zombie.speed;
@@ -90,6 +107,8 @@ public class ZombieType {
 			maxWalkTime = sWalkTime*zombie.walkLeft.length;
 			facing = "left";
 			walking = true;
+			onMove();
+
 		}
 		if(y >= Main.player.trueY){
 			maxWalkTime = sWalkTime*zombie.walkFront.length;
@@ -97,14 +116,22 @@ public class ZombieType {
 			walking = true;
 
 			y = y - zombie.speed;
+			onMove();
+
 		}
 		if(y <= Main.player.trueY){
 			maxWalkTime = sWalkTime*zombie.walkBack.length;
 			facing = "back";
 			walking = true;
 			y = y + zombie.speed;
-		}		
+			onMove();
+		}	
 		
+	}
+	
+	public void onMove(){
+		bounding = new Rectangle((int)(x + Main.camera.x), (int)(y + Main.camera.y), (int)zombie.size.x, (int)zombie.size.y);
+
 	}
 
 }

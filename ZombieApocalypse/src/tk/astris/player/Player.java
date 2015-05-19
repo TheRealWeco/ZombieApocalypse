@@ -1,9 +1,12 @@
 package tk.astris.player;
 
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Ellipse2D;
 
 import tk.astris.data.Char;
+import tk.astris.data.Size;
 import tk.astris.entity.Entity;
 import tk.astris.main.Main;
 import tk.astris.main.keyCheck;
@@ -32,6 +35,12 @@ public class Player extends Entity{
 	public float trueX = 0;
 	public float trueY = 0;
 	
+	public Shape hearRaduis;
+	public Size hearRaduisSize;
+	public Size hearRaduisSizeDef;
+	
+	public int illness = 0;
+
 	public Player(Char character){
 		this.character = character;
 		this.hp = character.hp;
@@ -51,40 +60,65 @@ public class Player extends Entity{
 		
 		this.trueX = x + size.x*2 + size.x/5;
 		this.trueY = y;
+		
+		hearRaduisSize = new Size(200, 200);
+		hearRaduisSizeDef = new Size(300, 300);
+		hearRaduis = new Ellipse2D.Float(trueX + Main.camera.x, trueY + Main.camera.y, hearRaduisSize.x, hearRaduisSize.y);
+		bounding = new Rectangle((int)trueX, (int)trueY, (int)character.size.x, (int)character.size.y);
 
+		onWalk();
+		
 	}
 	
 	
 	@Override
 	public void move() {
 		super.move();
-		
+
 		
 		if(keyCheck.keysCheck(KeyEvent.VK_W)){
 			maxWalkTime = sWalkTime*character.walkFront.length;
 			facing = "front";
 			walking = true;
+			onWalk();
 		}
 		else if(keyCheck.keysCheck(KeyEvent.VK_S)){
 			maxWalkTime = sWalkTime*character.walkBack.length;
 			facing = "back";
 			walking = true;
+			onWalk();
 		}
 		else if(keyCheck.keysCheck(KeyEvent.VK_A)){
 			this.revertTexture = true;
 			maxWalkTime = sWalkTime*character.walkLeft.length;
 			facing = "left";
 			walking = true;
+			onWalk();
 		}
 		else if(keyCheck.keysCheck(KeyEvent.VK_D)){
 			this.revertTexture = false;
 			maxWalkTime = sWalkTime*character.walkLeft.length;
 			facing = "left";
 			walking = true;
+			onWalk();
 		}else{
 			walking = false;
+			
+			if(hearRaduisSize.x != hearRaduisSizeDef.x && hearRaduisSize.y != hearRaduisSizeDef.y){
+				hearRaduisSize.x = 200;
+				hearRaduisSize.y = 200;
+				hearRaduis = new Ellipse2D.Float(trueX + Main.camera.x - hearRaduisSize.x/2 + size.x/2, trueY + Main.camera.y - hearRaduisSize.y/2 + size.y/2, hearRaduisSize.x, hearRaduisSize.y);
+			}
+			
 		}
 	
+	}
+	
+	public void onWalk(){
+		hearRaduisSize.x = hearRaduisSizeDef.x+100;
+		hearRaduisSize.y = hearRaduisSizeDef.y+100;
+		hearRaduis = new Ellipse2D.Float(trueX + Main.camera.x - hearRaduisSize.x/2 + size.x/2, trueY + Main.camera.y - hearRaduisSize.y/2 + size.y/2, hearRaduisSize.x, hearRaduisSize.y);
+		bounding = new Rectangle((int)(trueX + Main.camera.x), (int)(trueY + Main.camera.y), (int)character.size.x, (int)character.size.y);
 	}
 	
 	@Override

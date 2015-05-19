@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import tk.astris.entity.Entity;
 import tk.astris.entity.ZombieType;
 import tk.astris.levels.Level;
+import tk.astris.physics.collisions.Collision;
 import tk.astris.player.Player;
 import tk.astris.tile.Tile;
 
@@ -76,13 +77,28 @@ public class Frame extends JFrame{
 			player.trueX = player.trueX + player.speed;
 			onMove();
 		}
+		
 		for(int i = 0; i < entitys.size(); i++){
 			Entity entity = entitys.get(i);
 			entity.update();
 		}
+		
 		for(int i = 0; i < zombies2.size(); i++){
-			if(!zombies2.get(i).isDead){
-			zombies2.get(i).update();
+			
+			ZombieType zt = zombies2.get(i);
+			
+			if(!zt.isDead){
+			
+			zt.update();
+			if(Collision.testIntersection(zt.hearRaduis, player.hearRaduis)){
+				zt.move();
+			}
+			
+			if(zt.bounding.intersects(player.bounding)){
+				player.hp = zt.zombie.damage;
+				player.illness = Main.randInt(0, zt.zombie.posionLevel);
+			}
+			
 			}else{
 				zombies2.remove(i);
 			}
@@ -174,27 +190,30 @@ public class Frame extends JFrame{
 				}else{
 					g2d.drawImage(zt.image, (int)(zt.x + Main.camera.x) + zt.zombie.size.x, (int)(zt.y + Main.camera.y), -zt.zombie.size.x, zt.zombie.size.y,  null);
 				}
+				
+				if(debug){
+					g2d.draw(zt.hearRaduis);
+					g2d.draw(zt.bounding);
+				}
 			}
 			
 			if(debug){
-				g2d.drawRect((int)(player.trueX + Main.camera.x), (int)(player.trueY + Main.camera.y), player.size.x, player.size.y);
+				//g2d.drawRect((int)(player.trueX + Main.camera.x), (int)(player.trueY + Main.camera.y), player.size.x, player.size.y);
+				g2d.draw(player.bounding);
+				g2d.draw(player.hearRaduis);
 			}
 
 			int rdm = Main.randInt(0, 100);
 			if(rdm == 100){
-				System.out.println("spawn");
 				zombies2.add(new ZombieType(Main.zombies.zombie.get("0"), player.x + Main.randInt(Main.WIDTH, Main.WIDTH + 500), player.y + Main.randInt(Main.HEIGHT, Main.HEIGHT + 500)));
 			}
 			if(rdm == 200){
-				System.out.println("spawn");
 				zombies2.add(new ZombieType(Main.zombies.zombie.get("0"), -player.x - Main.randInt(Main.WIDTH, Main.WIDTH + 500), player.y + Main.randInt(Main.HEIGHT, Main.HEIGHT + 500)));
 			}
 			if(rdm == 300){
-				System.out.println("spawn");
 				zombies2.add(new ZombieType(Main.zombies.zombie.get("0"), player.x + Main.randInt(Main.WIDTH, Main.WIDTH + 500), -player.y - Main.randInt(Main.HEIGHT, Main.HEIGHT + 500)));
 			}
 			if(rdm == 400){
-				System.out.println("spawn");
 				zombies2.add(new ZombieType(Main.zombies.zombie.get("0"), -player.x - Main.randInt(Main.WIDTH, Main.WIDTH + 500), -player.y - Main.randInt(Main.HEIGHT, Main.HEIGHT + 500)));
 			}
 		}
