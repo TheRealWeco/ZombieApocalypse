@@ -34,6 +34,10 @@ public class ZombieType {
 	
 	public Rectangle bounding;
 	
+	public boolean canHear = false;
+	private int moveTo = 0;
+	private String moveToDir = "front";
+	
 	public ZombieType(Zombie z, float x, float y){
 		this.zombie = z;
 		this.x = x;
@@ -83,6 +87,65 @@ public class ZombieType {
 		}
 		
 		hearRaduis = new Ellipse2D.Float(x + Main.camera.x - hearRaduisSize.x/2 + zombie.size.x/2, y + Main.camera.y - hearRaduisSize.y/2 + zombie.size.y/2, hearRaduisSize.x , hearRaduisSize.y);
+		
+		int random = Main.randInt(0, 5);
+		
+		if(!canHear){
+			if(moveTo == 0){
+		if(random == 0){
+			x = x - zombie.speed;
+			facing = "left";
+			walking = true;
+			moveToDir = "left";
+			moveTo = Main.randInt(1, 1000);
+		}
+		if(random == 1){
+			x = x + zombie.speed;
+			facing = "right";
+			walking = true;
+			moveToDir = "right";
+			moveTo = Main.randInt(1, 1000);
+		}
+		if(random == 2){
+			y = y - zombie.speed;
+			facing = "front";
+			walking = true;
+			moveToDir = "front";
+			moveTo = Main.randInt(1, 1000);
+		}
+		if(random == 3){
+			y = y + zombie.speed;
+			facing = "back";
+			walking = true;
+			moveToDir = "back";
+			moveTo = Main.randInt(1, 1000);
+		} //TODO: More cases
+			}else{
+				moveTo--;
+				if(moveToDir.equals("left")){
+					facing = "left";
+					walking = true;
+					x = x - zombie.speed;
+				}
+				if(moveToDir.equals("right")){
+					facing = "right";
+					walking = true;
+					x = x + zombie.speed;
+				}
+				if(moveToDir.equals("front")){
+					facing = "front";
+					walking = true;
+					y = y - zombie.speed;
+				}
+				if(moveToDir.equals("back")){
+					facing = "back";
+					walking = true;
+					y = y + zombie.speed;
+				}
+
+			}
+		}
+		
 		if(walking){
 			walking = false;
 		}
@@ -131,7 +194,7 @@ public class ZombieType {
 	
 	public void onMove(){
 		bounding = new Rectangle((int)(x + Main.camera.x), (int)(y + Main.camera.y), (int)zombie.size.x, (int)zombie.size.y);
-
+		
 	}
 
 }

@@ -92,6 +92,9 @@ public class Frame extends JFrame{
 			zt.update();
 			if(Collision.testIntersection(zt.hearRaduis, player.hearRaduis)){
 				zt.move();
+				zt.canHear = true;
+			}else{
+				zt.canHear = false;
 			}
 			
 			if(zt.bounding.intersects(player.bounding)){
